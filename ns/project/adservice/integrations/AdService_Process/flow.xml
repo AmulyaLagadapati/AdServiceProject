@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<FLOW VERSION="3.2" CLEANUP="false">
+  <COMMENT></COMMENT>
+
+  <!-- nodes -->
+
+  <SEQUENCE TIMEOUT="" EXIT-ON="FAILURE" FORM="TRY">
+    <MAP TIMEOUT="" MODE="STANDALONE">
+      <COMMENT>Initialise the response and echo the memory token</COMMENT>
+      <MAPCOPY FROM="/AdServiceRequest;4;0;project.adservice.documenttypes:AdServiceRequest/pageContext;2;0/memoryToken;1;0" TO="/AdServiceResponse;4;0;project.adservice.documenttypes:AdServiceResponse/memoryToken;1;0">
+      </MAPCOPY>
+      <MAPSET NAME="Setter" OVERWRITE="true" VARIABLES="false" GLOBALVARIABLES="false" FIELD="/AdServiceResponse;4;0;project.adservice.documenttypes:AdServiceResponse/status;1;0">
+        <DATA ENCODING="XMLValues" I18N="true">
+          <Values version="2.0">
+            <value name="xml">ok</value>
+          </Values>
+        </DATA>
+      </MAPSET>
+    </MAP>
+  </SEQUENCE>
+  <SEQUENCE TIMEOUT="" EXIT-ON="FAILURE" FORM="CATCH">
+    <INVOKE TIMEOUT="" SERVICE="pub.flow:getLastFailureCaught" VALIDATE-IN="$none" VALIDATE-OUT="$none" NAME="Flow">
+      <MAP MODE="INPUT">
+      </MAP>
+      <MAP MODE="OUTPUT">
+        <MAPCOPY FROM="/failureMessage;1;0" TO="/errorMessage;1;0">
+        </MAPCOPY>
+      </MAP>
+    </INVOKE>
+    <INVOKE TIMEOUT="" SERVICE="pub.wmic.flow:logCustomMessage" VALIDATE-IN="$none" VALIDATE-OUT="$none" NAME="Flow">
+      <MAP MODE="INPUT">
+        <MAPSET NAME="Setter" OVERWRITE="true" VARIABLES="true" GLOBALVARIABLES="false" FIELD="/message;1;0">
+          <DATA ENCODING="XMLValues" I18N="true">
+            <Values version="2.0">
+              <value name="xml">AdService_Process failed, returning degraded response: %errorMessage%</value>
+            </Values>
+          </DATA>
+        </MAPSET>
+        <MAPSET NAME="Setter" OVERWRITE="true" VARIABLES="false" GLOBALVARIABLES="false" FIELD="/function;1;0">
+          <DATA ENCODING="XMLValues" I18N="true">
+            <Values version="2.0">
+              <value name="xml">AdService_Process</value>
+            </Values>
+          </DATA>
+        </MAPSET>
+        <MAPSET NAME="Setter" OVERWRITE="true" VARIABLES="false" GLOBALVARIABLES="false" FIELD="/level;1;0">
+          <DATA ENCODING="XMLValues" I18N="true">
+            <Values version="2.0">
+              <value name="xml">Error</value>
+            </Values>
+          </DATA>
+        </MAPSET>
+      </MAP>
+      <MAP MODE="OUTPUT">
+        <MAPDELETE FIELD="/message;1;0">
+        </MAPDELETE>
+        <MAPDELETE FIELD="/function;1;0">
+        </MAPDELETE>
+        <MAPDELETE FIELD="/level;1;0">
+        </MAPDELETE>
+      </MAP>
+    </INVOKE>
+    <MAP TIMEOUT="" MODE="STANDALONE">
+      <COMMENT>Fail open: degraded response with no ads</COMMENT>
+      <MAPSET NAME="Setter" OVERWRITE="true" VARIABLES="false" GLOBALVARIABLES="false" FIELD="/AdServiceResponse;4;0;project.adservice.documenttypes:AdServiceResponse/status;1;0">
+        <DATA ENCODING="XMLValues" I18N="true">
+          <Values version="2.0">
+            <value name="xml">degraded</value>
+          </Values>
+        </DATA>
+      </MAPSET>
+      <MAPDELETE FIELD="/AdServiceResponse;4;0;project.adservice.documenttypes:AdServiceResponse/banners;2;1">
+      </MAPDELETE>
+      <MAPDELETE FIELD="/AdServiceResponse;4;0;project.adservice.documenttypes:AdServiceResponse/sponsoredProducts;2;1">
+      </MAPDELETE>
+      <MAPDELETE FIELD="/failure;3;0">
+      </MAPDELETE>
+      <MAPDELETE FIELD="/failureMessage;1;0">
+      </MAPDELETE>
+      <MAPDELETE FIELD="/failureName;1;0">
+      </MAPDELETE>
+    </MAP>
+  </SEQUENCE>
+</FLOW>
