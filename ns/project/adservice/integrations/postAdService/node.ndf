@@ -79,6 +79,65 @@
     <value name="displayName">postAdService</value>
     <value name="description"></value>
     <record name="stepNodeHints" javaclass="com.wm.util.Values">
+      <record name="/0" javaclass="com.wm.util.Values">
+        <value name="name">TRY</value>
+        <value name="itemType">CONTROLS</value>
+        <number name="ui_step_index" type="Long">1</number>
+        <value name="nodePathNew">0</value>
+        <number name="nodeIndex" type="Long">0</number>
+        <number name="lineNumberForDebug" type="Long">1</number>
+        <value name="nodePathForDebug">0</value>
+      </record>
+      <record name="/0/0" javaclass="com.wm.util.Values">
+        <value name="name">TRANSFORM</value>
+        <value name="itemType">CONTROLS</value>
+        <number name="ui_step_index" type="Long">2</number>
+        <value name="nodePathNew">0.0</value>
+        <number name="nodeIndex" type="Long">0</number>
+        <number name="lineNumberForDebug" type="Long">2</number>
+        <value name="nodePathForDebug">0.0</value>
+      </record>
+      <record name="/1" javaclass="com.wm.util.Values">
+        <value name="name">CATCH</value>
+        <value name="itemType">CONTROLS</value>
+        <number name="ui_step_index" type="Long">3</number>
+        <value name="nodePathNew">1</value>
+        <number name="nodeIndex" type="Long">1</number>
+        <number name="lineNumberForDebug" type="Long">3</number>
+        <value name="nodePathForDebug">1</value>
+      </record>
+      <record name="/1/0" javaclass="com.wm.util.Values">
+        <null name="name"/>
+        <value name="itemType">SERVICES</value>
+        <record name="serviceInfo" javaclass="com.wm.util.Values">
+          <value name="groupDisplayName">Flow</value>
+          <value name="groupName">flow</value>
+          <null name="services"/>
+        </record>
+        <record name="serviceName" javaclass="com.wm.util.Values">
+          <value name="displayName">getLastFailureCaught</value>
+          <value name="serviceName">pub.flow:getLastFailureCaught</value>
+          <value name="transformerSupport">true</value>
+        </record>
+        <null name="mapSet"/>
+        <null name="outputMapSet"/>
+        <Boolean name="serviceReferenceResolved">true</Boolean>
+        <Boolean name="storeConfigurationResolved">true</Boolean>
+        <number name="ui_step_index" type="Long">4</number>
+        <value name="nodePathNew">1.0</value>
+        <number name="nodeIndex" type="Long">0</number>
+        <number name="lineNumberForDebug" type="Long">4</number>
+        <value name="nodePathForDebug">1.0</value>
+      </record>
+      <record name="/1/1" javaclass="com.wm.util.Values">
+        <value name="name">TRANSFORM</value>
+        <value name="itemType">CONTROLS</value>
+        <number name="ui_step_index" type="Long">5</number>
+        <value name="nodePathNew">1.1</value>
+        <number name="nodeIndex" type="Long">1</number>
+        <number name="lineNumberForDebug" type="Long">5</number>
+        <value name="nodePathForDebug">1.1</value>
+      </record>
     </record>
   </record>
   <value name="svc_in_validator_options">none</value>
