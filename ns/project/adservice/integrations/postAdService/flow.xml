@@ -6,18 +6,13 @@
   <!-- nodes -->
 
   <SEQUENCE TIMEOUT="" EXIT-ON="FAILURE" FORM="TRY">
-    <MAP TIMEOUT="" MODE="STANDALONE">
-      <COMMENT>Initialise the response and echo the memory token</COMMENT>
-      <MAPCOPY FROM="/AdServiceRequest;4;0;project.adservice.documenttypes:AdServiceRequest/pageContext;2;0/memoryToken;1;0" TO="/AdServiceResponse;4;0;project.adservice.documenttypes:AdServiceResponse/memoryToken;1;0">
-      </MAPCOPY>
-      <MAPSET NAME="Setter" OVERWRITE="true" VARIABLES="false" GLOBALVARIABLES="false" FIELD="/AdServiceResponse;4;0;project.adservice.documenttypes:AdServiceResponse/status;1;0">
-        <DATA ENCODING="XMLValues" I18N="true">
-          <Values version="2.0">
-            <value name="xml">ok</value>
-          </Values>
-        </DATA>
-      </MAPSET>
-    </MAP>
+    <INVOKE TIMEOUT="" SERVICE="project.adservice.integrations:AdService_Process" VALIDATE-IN="$none" VALIDATE-OUT="$none">
+      <COMMENT>Build the ad response from the request</COMMENT>
+      <MAP MODE="INPUT">
+      </MAP>
+      <MAP MODE="OUTPUT">
+      </MAP>
+    </INVOKE>
   </SEQUENCE>
   <SEQUENCE TIMEOUT="" EXIT-ON="FAILURE" FORM="CATCH">
     <INVOKE TIMEOUT="" SERVICE="pub.flow:getLastFailureCaught" VALIDATE-IN="$none" VALIDATE-OUT="$none" NAME="Flow">
