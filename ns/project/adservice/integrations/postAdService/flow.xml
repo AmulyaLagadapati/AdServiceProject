@@ -28,6 +28,39 @@
         </MAPCOPY>
       </MAP>
     </INVOKE>
+    <INVOKE TIMEOUT="" SERVICE="pub.wmic.flow:logCustomMessage" VALIDATE-IN="$none" VALIDATE-OUT="$none" NAME="Flow">
+      <MAP MODE="INPUT">
+        <MAPSET NAME="Setter" OVERWRITE="true" VARIABLES="true" GLOBALVARIABLES="false" FIELD="/message;1;0">
+          <DATA ENCODING="XMLValues" I18N="true">
+            <Values version="2.0">
+              <value name="xml">postAdService failed, returning degraded response: %errorMessage%</value>
+            </Values>
+          </DATA>
+        </MAPSET>
+        <MAPSET NAME="Setter" OVERWRITE="true" VARIABLES="false" GLOBALVARIABLES="false" FIELD="/function;1;0">
+          <DATA ENCODING="XMLValues" I18N="true">
+            <Values version="2.0">
+              <value name="xml">postAdService</value>
+            </Values>
+          </DATA>
+        </MAPSET>
+        <MAPSET NAME="Setter" OVERWRITE="true" VARIABLES="false" GLOBALVARIABLES="false" FIELD="/level;1;0">
+          <DATA ENCODING="XMLValues" I18N="true">
+            <Values version="2.0">
+              <value name="xml">Error</value>
+            </Values>
+          </DATA>
+        </MAPSET>
+      </MAP>
+      <MAP MODE="OUTPUT">
+        <MAPDELETE FIELD="/message;1;0">
+        </MAPDELETE>
+        <MAPDELETE FIELD="/function;1;0">
+        </MAPDELETE>
+        <MAPDELETE FIELD="/level;1;0">
+        </MAPDELETE>
+      </MAP>
+    </INVOKE>
     <MAP TIMEOUT="" MODE="STANDALONE">
       <COMMENT>Fail open: degraded response with no ads</COMMENT>
       <MAPSET NAME="Setter" OVERWRITE="true" VARIABLES="false" GLOBALVARIABLES="false" FIELD="/AdServiceResponse;4;0;project.adservice.documenttypes:AdServiceResponse/status;1;0">
