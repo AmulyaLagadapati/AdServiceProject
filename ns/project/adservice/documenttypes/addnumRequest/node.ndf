@@ -9,8 +9,10 @@
     <record name="node_hints" javaclass="com.wm.util.Values">
       <record name="revisionData" javaclass="com.wm.util.Values">
         <value name="createdBy">amulya.lagadapati@henryschein.com</value>
+        <value name="createdByUserId">31acb4a310ee42058af4ac4a6fe1a9da</value>
         <number name="createdDate" type="Long">1793189022000</number>
         <value name="lastModifiedBy">amulya.lagadapati@henryschein.com</value>
+        <value name="lastModifiedByUserId">31acb4a310ee42058af4ac4a6fe1a9da</value>
         <number name="lastModifiedDate" type="Long">1793189022000</number>
       </record>
       <Boolean name="wMIODocTypeReplica">true</Boolean>
