@@ -1,0 +1,113 @@
+interface project.adservice.integrations
+service AdService_Process (
+    input {
+        record AdServiceRequest (project.adservice.documenttypes:AdServiceRequest);
+    }
+    output {
+        record AdServiceResponse (project.adservice.documenttypes:AdServiceResponse);
+    }
+)
+properties {
+    visible: private;
+    reuse: private;
+    stateless: true;
+    cacheResults: false;
+    cacheExpire: 15;
+    prefetch: false;
+    prefetchActivation: 1;
+    allowedHttpMethods: [TRACE, HEAD, DELETE, POST, GET, OPTIONS, PUT, PATCH];
+    maxRetryAttempts: 0;
+    retryInterval: 0;
+    enableAuditing: never;
+    logOn: Error only;
+    includePipeline: never;
+    validateInput: false;
+    validateOutput: false;
+}
+{
+    TRY {
+        MAP {
+            comment: "Take pageContext out of the request"
+            mapSource {
+                record AdServiceRequest (project.adservice.documenttypes:AdServiceRequest);
+            }
+            mapTarget {
+                record pageContext {
+                    String memoryToken;
+                };
+            }
+            copy AdServiceRequest/pageContext -> pageContext;
+        }
+        MAP {
+            comment: "Take memoryToken out of pageContext"
+            mapSource {
+                record pageContext {
+                    String memoryToken;
+                };
+            }
+            mapTarget {
+                String memoryToken;
+            }
+            copy pageContext/memoryToken -> memoryToken;
+            drop pageContext;
+        }
+        MAP {
+            comment: "Initialise the response and echo the memory token"
+            mapSource {
+                String memoryToken;
+            }
+            mapTarget {
+                record AdServiceResponse (project.adservice.documenttypes:AdServiceResponse);
+            }
+            copy memoryToken -> AdServiceResponse/memoryToken;
+            set AdServiceResponse/status = "ok";
+            drop memoryToken;
+        }
+    }
+    CATCH {
+        INVOKE pub.flow:getLastFailureCaught {
+            output {
+                mapSource {
+                    String failureMessage;
+                }
+                mapTarget {
+                    String errorMessage;
+                }
+                copy failureMessage -> errorMessage;
+            }
+        }
+        INVOKE pub.flow:debugLog {
+            input {
+                mapSource {
+                    String errorMessage;
+                }
+                mapTarget {
+                    String `message`;
+                    String function;
+                    String level;
+                }
+                set (variable) `message` = "AdService_Process failed, returning degraded response: %errorMessage%";
+                set function = "AdService_Process";
+                set level = "Error";
+            }
+        }
+        MAP {
+            comment: "Fail open: degraded response with no ads"
+            mapSource {
+                record AdServiceResponse (project.adservice.documenttypes:AdServiceResponse);
+                Object failure;
+                String failureMessage;
+                String failureName;
+            }
+            mapTarget {
+                record AdServiceResponse (project.adservice.documenttypes:AdServiceResponse);
+            }
+            set AdServiceResponse/status = "degraded";
+            drop AdServiceResponse/banners;
+            drop AdServiceResponse/sponsoredProducts;
+            drop failure;
+            drop failureMessage;
+            drop failureName;
+        }
+    }
+}

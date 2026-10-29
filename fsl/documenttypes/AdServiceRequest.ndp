@@ -1,0 +1,31 @@
+interface project.adservice.documenttypes
+document AdServiceRequest {
+    String pageType [required];
+    String market [required];
+    record pageContext {
+        String searchTerm;
+        String categoryCode;
+        String productCode;
+        record filters {
+            String category;
+            String[] brand;
+        };
+        Integer page;
+        String memoryToken;
+    };
+    record sponsoredSlots {
+        String slotId;
+        Integer maxNumberOfAds;
+    };
+    recordList bannerSlots {
+        String zoneId;
+        String slotId;
+        Integer maxNumberOfAds;
+    };
+    record user {
+        String shipToAccount;
+        String sessionId [required];
+        String dtmCookieId;
+        Boolean adConsent [required];
+    } [required];
+}

@@ -1,0 +1,32 @@
+interface project.adservice.documenttypes
+document AdServiceResponse {
+    String status [required];
+    recordList banners {
+        String zoneId;
+        String slotId;
+        String adId;
+        record creative {
+            String type;
+            recordList variants {
+                String size;
+                String url;
+            };
+        };
+        String clickUrl;
+        record tracking {
+            String impressionUrl;
+            String clickUrl;
+        };
+    };
+    recordList sponsoredProducts {
+        String adId;
+        String productCode;
+        Integer position;
+        String expiry;
+        record tracking {
+            String impressionUrl;
+            String clickUrl;
+        };
+    };
+    String memoryToken;
+}
