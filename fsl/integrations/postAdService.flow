@@ -28,6 +28,24 @@ properties {
     TRY {
         INVOKE project.adservice.integrations:AdService_Process {
             comment: "Build the ad response from the request"
+            input {
+                mapSource {
+                    record AdServiceRequest (project.adservice.documenttypes:AdServiceRequest);
+                }
+                mapTarget {
+                    record AdServiceRequest (project.adservice.documenttypes:AdServiceRequest);
+                }
+                copy AdServiceRequest -> AdServiceRequest;
+            }
+            output {
+                mapSource {
+                    record AdServiceResponse (project.adservice.documenttypes:AdServiceResponse);
+                }
+                mapTarget {
+                    record AdServiceResponse (project.adservice.documenttypes:AdServiceResponse);
+                }
+                copy AdServiceResponse -> AdServiceResponse;
+            }
         }
     }
     CATCH {
