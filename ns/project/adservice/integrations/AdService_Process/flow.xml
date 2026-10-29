@@ -30,6 +30,63 @@
     </INVOKE>
     <INVOKE TIMEOUT="" SERVICE="pub.wmic.flow:logCustomMessage" VALIDATE-IN="$none" VALIDATE-OUT="$none" NAME="Flow">
       <MAP MODE="INPUT">
+        <MAPTARGET>
+          <Values version="2.0">
+            <record name="xml" javaclass="com.wm.util.Values">
+              <value name="node_type">record</value>
+              <value name="node_subtype">unknown</value>
+              <value name="is_public">false</value>
+              <value name="field_name">logCustomMessageInput</value>
+              <value name="field_type">record</value>
+              <value name="field_dim">0</value>
+              <value name="nillable">true</value>
+              <value name="form_qualified">false</value>
+              <value name="is_global">false</value>
+              <array name="rec_fields" type="record" depth="1">
+                <record javaclass="com.wm.util.Values">
+                  <value name="node_type">field</value>
+                  <value name="node_subtype">unknown</value>
+                  <value name="is_public">false</value>
+                  <value name="field_name">message</value>
+                  <value name="field_type">string</value>
+                  <value name="field_dim">0</value>
+                  <value name="nillable">true</value>
+                  <value name="form_qualified">false</value>
+                  <value name="is_global">false</value>
+                </record>
+              </array>
+              <value name="modifiable">true</value>
+            </record>
+          </Values>
+        </MAPTARGET>
+        <MAPSOURCE>
+          <Values version="2.0">
+            <record name="xml" javaclass="com.wm.util.Values">
+              <value name="node_type">record</value>
+              <value name="node_subtype">unknown</value>
+              <value name="is_public">false</value>
+              <value name="field_type">record</value>
+              <value name="field_dim">0</value>
+              <value name="nillable">true</value>
+              <value name="form_qualified">false</value>
+              <value name="is_global">false</value>
+              <array name="rec_fields" type="record" depth="1">
+                <record javaclass="com.wm.util.Values">
+                  <value name="node_type">unknown</value>
+                  <value name="node_subtype">unknown</value>
+                  <value name="is_public">false</value>
+                  <value name="field_name">errorMessage</value>
+                  <value name="field_type">string</value>
+                  <value name="field_dim">0</value>
+                  <value name="nillable">true</value>
+                  <value name="form_qualified">false</value>
+                  <value name="is_global">false</value>
+                </record>
+              </array>
+              <value name="modifiable">true</value>
+            </record>
+          </Values>
+        </MAPSOURCE>
         <MAPSET NAME="Setter" OVERWRITE="true" VARIABLES="true" GLOBALVARIABLES="false" FIELD="/message;1;0">
           <DATA ENCODING="XMLValues" I18N="true">
             <Values version="2.0">
@@ -37,27 +94,9 @@
             </Values>
           </DATA>
         </MAPSET>
-        <MAPSET NAME="Setter" OVERWRITE="true" VARIABLES="false" GLOBALVARIABLES="false" FIELD="/function;1;0">
-          <DATA ENCODING="XMLValues" I18N="true">
-            <Values version="2.0">
-              <value name="xml">AdService_Process</value>
-            </Values>
-          </DATA>
-        </MAPSET>
-        <MAPSET NAME="Setter" OVERWRITE="true" VARIABLES="false" GLOBALVARIABLES="false" FIELD="/level;1;0">
-          <DATA ENCODING="XMLValues" I18N="true">
-            <Values version="2.0">
-              <value name="xml">Error</value>
-            </Values>
-          </DATA>
-        </MAPSET>
       </MAP>
       <MAP MODE="OUTPUT">
         <MAPDELETE FIELD="/message;1;0">
-        </MAPDELETE>
-        <MAPDELETE FIELD="/function;1;0">
-        </MAPDELETE>
-        <MAPDELETE FIELD="/level;1;0">
         </MAPDELETE>
       </MAP>
     </INVOKE>
