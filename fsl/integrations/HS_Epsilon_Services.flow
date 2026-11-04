@@ -132,6 +132,9 @@ properties {
                 String failureName;
                 String errorMessage;
                 String errorType;
+                String `message`;
+                String function;
+                String level;
             }
             mapTarget {
                 record AdGenerationFilteringResponse (project.adservice.documenttypes:AdGenerationFilteringResponse);
@@ -144,6 +147,9 @@ properties {
             drop failureName;
             drop errorMessage;
             drop errorType;
+            drop `message`;
+            drop function;
+            drop level;
         }
     }
 }
