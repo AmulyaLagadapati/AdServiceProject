@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<FLOW VERSION="3.2" CLEANUP="false">
+  <COMMENT></COMMENT>
+
+  <!-- nodes -->
+
+  <SEQUENCE TIMEOUT="" EXIT-ON="FAILURE">
+    <COMMENT>Reject requests missing required fields (not fail-open)</COMMENT>
+    <BRANCH TIMEOUT="" LABELEXPRESSIONS="true">
+      <SEQUENCE NAME="%AddGenerationFilteringRequest% == $null" TIMEOUT="" EXIT-ON="FAILURE">
+        <EXIT FROM="$flow" SIGNAL="FAILURE" FAILURE-MESSAGE="AddGenerationFilteringRequest is required">
+        </EXIT>
+      </SEQUENCE>
+    </BRANCH>
+    <MAP TIMEOUT="" MODE="STANDALONE">
+      <COMMENT>Copy required fields to flat variables for checking</COMMENT>
+      <MAPCOPY FROM="/AddGenerationFilteringRequest;4;0;project.adservice.documenttypes:AddGenerationFilteringRequest/sessionId;1;0" TO="/sessionId;1;0">
+      </MAPCOPY>
+      <MAPCOPY FROM="/AddGenerationFilteringRequest;4;0;project.adservice.documenttypes:AddGenerationFilteringRequest/placement;1;0" TO="/placement;1;0">
+      </MAPCOPY>
+      <MAPCOPY FROM="/AddGenerationFilteringRequest;4;0;project.adservice.documenttypes:AddGenerationFilteringRequest/catalogId;1;0" TO="/catalogId;1;0">
+      </MAPCOPY>
+    </MAP>
+    <BRANCH TIMEOUT="" LABELEXPRESSIONS="true">
+      <SEQUENCE NAME="%sessionId% == $null" TIMEOUT="" EXIT-ON="FAILURE">
+        <EXIT FROM="$flow" SIGNAL="FAILURE" FAILURE-MESSAGE="sessionId is required">
+        </EXIT>
+      </SEQUENCE>
+    </BRANCH>
+    <BRANCH TIMEOUT="" LABELEXPRESSIONS="true">
+      <SEQUENCE NAME="%placement% == $null" TIMEOUT="" EXIT-ON="FAILURE">
+        <EXIT FROM="$flow" SIGNAL="FAILURE" FAILURE-MESSAGE="placement is required">
+        </EXIT>
+      </SEQUENCE>
+    </BRANCH>
+    <BRANCH TIMEOUT="" LABELEXPRESSIONS="true">
+      <SEQUENCE NAME="%catalogId% == $null" TIMEOUT="" EXIT-ON="FAILURE">
+        <EXIT FROM="$flow" SIGNAL="FAILURE" FAILURE-MESSAGE="catalogId is required">
+        </EXIT>
+      </SEQUENCE>
+    </BRANCH>
+    <MAP TIMEOUT="" MODE="STANDALONE">
+      <MAPDELETE FIELD="/sessionId;1;0">
+      </MAPDELETE>
+      <MAPDELETE FIELD="/placement;1;0">
+      </MAPDELETE>
+      <MAPDELETE FIELD="/catalogId;1;0">
+      </MAPDELETE>
+    </MAP>
+  </SEQUENCE>
+  <SEQUENCE TIMEOUT="" EXIT-ON="FAILURE" FORM="TRY">
+    <MAP TIMEOUT="" MODE="STANDALONE">
+      <COMMENT>Placeholder for the Epsilon ad generation call</COMMENT>
+      <MAPSET NAME="Setter" OVERWRITE="true" VARIABLES="false" GLOBALVARIABLES="false" FIELD="/AdGenerationFilteringResponse;4;0;project.adservice.documenttypes:AdGenerationFilteringResponse/memoryToken;1;0">
+        <DATA ENCODING="XMLValues" I18N="true">
+          <Values version="2.0">
+            <value name="xml"></value>
+          </Values>
+        </DATA>
+      </MAPSET>
+    </MAP>
+  </SEQUENCE>
+  <SEQUENCE TIMEOUT="" EXIT-ON="FAILURE" FORM="CATCH">
+    <INVOKE TIMEOUT="" SERVICE="pub.flow:getLastFailureCaught" VALIDATE-IN="$none" VALIDATE-OUT="$none" NAME="Flow">
+      <MAP MODE="INPUT">
+      </MAP>
+      <MAP MODE="OUTPUT">
+        <MAPCOPY FROM="/failureMessage;1;0" TO="/errorMessage;1;0">
+        </MAPCOPY>
+        <MAPCOPY FROM="/failureName;1;0" TO="/errorType;1;0">
+        </MAPCOPY>
+      </MAP>
+    </INVOKE>
+    <INVOKE TIMEOUT="" SERVICE="pub.flow:debugLog" VALIDATE-IN="$none" VALIDATE-OUT="$none" NAME="Flow">
+      <MAP MODE="INPUT">
+        <MAPSET NAME="Setter" OVERWRITE="true" VARIABLES="true" GLOBALVARIABLES="false" FIELD="/message;1;0">
+          <DATA ENCODING="XMLValues" I18N="true">
+            <Values version="2.0">
+              <value name="xml">HS_Epsilon_Services failed (%errorType%), returning no ads: %errorMessage%</value>
+            </Values>
+          </DATA>
+        </MAPSET>
+        <MAPSET NAME="Setter" OVERWRITE="true" VARIABLES="false" GLOBALVARIABLES="false" FIELD="/function;1;0">
+          <DATA ENCODING="XMLValues" I18N="true">
+            <Values version="2.0">
+              <value name="xml">HS_Epsilon_Services</value>
+            </Values>
+          </DATA>
+        </MAPSET>
+        <MAPSET NAME="Setter" OVERWRITE="true" VARIABLES="false" GLOBALVARIABLES="false" FIELD="/level;1;0">
+          <DATA ENCODING="XMLValues" I18N="true">
+            <Values version="2.0">
+              <value name="xml">Error</value>
+            </Values>
+          </DATA>
+        </MAPSET>
+      </MAP>
+      <MAP MODE="OUTPUT">
+      </MAP>
+    </INVOKE>
+    <MAP TIMEOUT="" MODE="STANDALONE">
+      <COMMENT>Fail open: empty ad response</COMMENT>
+      <MAPDELETE FIELD="/AdGenerationFilteringResponse;4;0;project.adservice.documenttypes:AdGenerationFilteringResponse/ads;2;1">
+      </MAPDELETE>
+      <MAPDELETE FIELD="/AdGenerationFilteringResponse;4;0;project.adservice.documenttypes:AdGenerationFilteringResponse/banners;2;1">
+      </MAPDELETE>
+      <MAPDELETE FIELD="/AdGenerationFilteringResponse;4;0;project.adservice.documenttypes:AdGenerationFilteringResponse/products;2;1">
+      </MAPDELETE>
+      <MAPDELETE FIELD="/failure;3;0">
+      </MAPDELETE>
+      <MAPDELETE FIELD="/failureMessage;1;0">
+      </MAPDELETE>
+      <MAPDELETE FIELD="/failureName;1;0">
+      </MAPDELETE>
+      <MAPDELETE FIELD="/errorMessage;1;0">
+      </MAPDELETE>
+      <MAPDELETE FIELD="/errorType;1;0">
+      </MAPDELETE>
+      <MAPDELETE FIELD="/message;1;0">
+      </MAPDELETE>
+      <MAPDELETE FIELD="/function;1;0">
+      </MAPDELETE>
+      <MAPDELETE FIELD="/level;1;0">
+      </MAPDELETE>
+    </MAP>
+  </SEQUENCE>
+</FLOW>
